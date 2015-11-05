@@ -106,9 +106,9 @@ void send_packet(u8 bind)
     } else {
         packet[0] = 0xa5;
         packet[1] = 0xfa;   // normal mode is 0xf7, expert 0xfa
-        packet[2] = GET_FLAG(AUX2, BAYANG_FLAG_FLIP)
-                  | GET_FLAG(AUX5, BAYANG_FLAG_HEADLESS)
-                  | GET_FLAG(AUX6, BAYANG_FLAG_RTH);
+        packet[2] = GET_FLAG(AUX1, BAYANG_FLAG_FLIP)
+                  | ((ppm[AUX2] > PPM_MIN_COMMAND && ppm[AUX2] < PPM_MAX_COMMAND) ? BAYANG_FLAG_HEADLESS : 0)
+                  | (ppm[AUX2] > PPM_MAX_COMMAND ? BAYANG_FLAG_RTH : 0);
         packet[3] = GET_FLAG(AUX1, BAYANG_FLAG_INVERT);
         chanval.value = map(ppm[AILERON], PPM_MIN, PPM_MAX, 0, 0x3ff);   // aileron
         packet[4] = chanval.bytes.msb + DYNTRIM(chanval.value);
